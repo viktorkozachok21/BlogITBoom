@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.1/css/mdb.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
+  <title>ITBoom</title>
+</head>
+
+<body>
+  <button id="back-to-top-btn"><i class="fas fa-angle-double-up"></i></button>
+  <nav class="navbar justify-content-center navbar-dark">
+    <a class="navbar-brand mb-0 h1" id="brand-logo" href="#"><span>ITBoom</span></a>
+  </nav>
+
+  <nav class="menu">
+    <header>Menu <span>×</span></header>
+    <ol>
+      <li class="menu-item"><a href="#back-to-top-btn">Home</a></li>
+      <li class="menu-item"><a href="#contact-form">Contact</a></li>
+      <li class="menu-item">
+        <a href="#heading1">Topic</a>
+        <ol class="sub-menu">
+          <li class="menu-item"><a href="#heading1" data-toggle="collapse" data-target="#collapse1" aria-expanded="false" aria-controls="collapse1">Question One</a></li>
+          <li class="menu-item"><a href="#heading2" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapse2">Question Two</a></li>
+          <li class="menu-item"><a href="#heading3" data-toggle="collapse" data-target="#collapse3" aria-expanded="false" aria-controls="collapse3">Question Three</a></li>
+          <li class="menu-item"><a href="#heading4" data-toggle="collapse" data-target="#collapse4" aria-expanded="false" aria-controls="collapse4">Question Four</a></li>
+          <li class="menu-item"><a href="#heading5" data-toggle="collapse" data-target="#collapse5" aria-expanded="false" aria-controls="collapse5">Question Five</a></li>
+        </ol>
+      </li>
+      <li class="menu-item"><p onclick="toggle();">Music</p></li>
+    </ol>
+    <footer><button aria-label="Toggle Menu">Toggle</button></footer>
+  </nav>
+
+  {% block carousel %}
+  {% endblock %}
+
+  <main>
+    <div class="accordion" id="accordionExample">
+      {% for item in Articles %}
+      <section class="card z-depth-0 view overlay">
+        <div class="card-header m-3" id="heading{{ item.id }}">
+          <button class="btn hoverable" type="button" data-toggle="collapse" data-target="#collapse{{ item.id }}" aria-expanded="false" aria-controls="collapse{{ item.id }}">
+            <h5>{{ item.title }}</h5>
+          </button>
+        </div>
+        <div id="collapse{{ item.id }}" class="collapse" aria-labelledby="heading{{ item.id }}" data-parent="#accordionExample">
+          <article class="article card-body example z-depth-5 m-3">{{ item.content|safe }}
+            <div class="more d-flex justify-content-center" title="{{ item.title }}">
+              <a class="btn btn-blue-grey text-dark btn-md" href="#article">Read more</a>
+            </div>
+          </article>
+        </div>
+      </section>
+      {% endfor %}
+    </div>
+
+    <div class="rating">
+      <canvas id="Top"></canvas>
+      <script>
+        var ctx = document.getElementById('Top').getContext('2d');
+        var labels_list = {{ languages_title|safe }}
+        var data_list = {{ languages_index|safe }}
+        var Top = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels_list,
+            datasets: [{
+              label: 'Top Index',
+              data: data_list,
+              backgroundColor: [
+                'rgba(0, 0, 0, 0.6)',
+                'rgba(0, 0, 0, 0.6)',
+                'rgba(0, 0, 0, 0.6)',
+                'rgba(0, 0, 0, 0.6)',
+                'rgba(0, 0, 0, 0.6)',
+                'rgba(0, 0, 0, 0.6)',
+                'rgba(0, 0, 0, 0.6)',
+                'rgba(0, 0, 0, 0.6)',
+                'rgba(0, 0, 0, 0.6)',
+                'rgba(0, 0, 0, 0.6)',
+                'rgba(0, 0, 0, 0.6)'
+              ],
+              borderColor: [
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(75, 192, 192, 1)'
+              ],
+              borderWidth: 2
+            }]
+          },
+          options: {
+            title: {
+              display: true,
+              text: 'Top Computer Languages',
+              fontSize: 25
+            },
+            legend: {
+              display: true,
+              labels: {
+                fontSize: 15,
+                padding: 10
+              }
+            },
+            layout: {
+              padding: {
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0
+              }
+            },
+            scales: {
+              xAxes: [{
+                display: true,
+              }],
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true
+                }
+              }]
+            }
+          }
+        });
+      </script>
+    </div>
+
+    <article class="information-content">
+      <div id="article" class="content card pb-5">
+        <div class="article-header card-header m-3">
+        <h1>{{ Article.title }}</h1>
+        </div>
+        <div class="article-content container example z-depth-3 p-3">
+          {{ Article.description|safe }}
+        </div>
+      </div>
+    </article>
+
+    <div class="row information-panel">
+      <div class="weather col-md card">
+        <h4>Weather Forecast</h4>
+        <h5 class="location-timezone p-1"></h5>
+        <div class="location row">
+          <canvas class="icon" width="50" height="50"></canvas>
+        </div>
+        <div class="temperature row">
+          <h6 class="temperature-degree"></h6>
+          <span><sup>°C</sup></span>
+        </div>
+        <div class="temperature-description row"></div>
+      </div>
+      <div class="about col-md card">
+        <div class="avatar mx-auto">
+          <img src="{% static 'images/avatar.jpg' %}" class="rounded-circle z-depth-3" width="300" alt="Developer avatar">
+        </div>
+        <h5 class="font-weight-bold mt-4 mb-3">Viktor Kozachok</h5>
+        <p class="text-uppercase blue-text"><strong>junior Web developer</strong></p>
+        <p class="grey-text"></p>
+        <ul class="list-unstyled mb-0">
+          <a href="https://github.com/viktorkozachok21" class="p-2 fa-lg fb-ic">
+            <i class="fab fa-github teal-text"> </i>
+          </a>
+          <a href="https://www.linkedin.com/in/viktor-kozachok-39b608175/" class="p-2 fa-lg tw-ic">
+            <i class="fab fa-linkedin teal-text"> </i>
+          </a>
+          <a href="https://t.me/BeCeJIyH4iK" class="p-2 fa-lg ins-ic">
+            <i class="fab fa-telegram teal-text"> </i>
+          </a>
+        </ul>
+      </div>
+      <div class="send-us col-md card">
+        <form id="contact-form" method="POST" action="">
+          {% csrf_token %}
+          <div class="messages"></div>
+          <div class="controls">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="author">Your name</label>
+                  <input id="author" type="text" name="author" class="form-control" placeholder="Please enter your name" required="required">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input id="email" type="email" name="email" class="form-control" placeholder="Please enter your email" required="required" data-error="Valid email is required.">
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="message">Message</label>
+                  <textarea id="message" name="message" class="form-control" placeholder="Message for me" rows="4" required="required"></textarea>
+                  <div class="help-block with-errors"></div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="more d-flex justify-content-center">
+                  <button type="submit" class="btn btn-success btn-send">Send <i class="fa fa-paper-plane-o ml-1"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="music">
+      <div id="container-top">
+        <img src="https://i.pinimg.com/originals/a7/04/e9/a704e9fa66ec12a031be73a33dc2cea2.gif" alt="">
+      </div>
+      <div id="container-bottom">
+        <h3 id="songName">Song Name</h3>
+        <h4 id="songArtist">Song Artist</h4>
+        <div id="btns">
+          <button id="backward" onClick="prev();"><i class="fa fa-backward"></i></button>
+          <button id="play" onClick="playPause();"><i class="fa fa-play"></i></button>
+          <button id="forward" onClick="next();"><i class="fa fa-forward"></i></button>
+          <button id="list" data-toggle="modal" data-target="#musicList"><i class="fa fa-music"></i></button>
+          <button id="hide" onClick="toggle();" title="Hide"><i class="fa fa-eye-slash"></i></button>
+        </div>
+        <div id="durationBar">
+          <div id="expandingBar"></div>
+          <div id="movingBar"></div>
+        </div>
+      </div>
+    </div>
+    <marquee class="runing w-100" behavior="scroll" direction="left">{{ run_line }}</marquee>
+  </main>
+
+  <div class="page-footer">
+    <p>Copyright &copy; <script>
+        document.write(new Date().getFullYear());
+      </script>, BeCeJIyH4iK</p>
+  </div>
+
+  <div class="modal fade" id="musicList" tabindex="-1" role="dialog" aria-labelledby="musicList" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form id="offer-form" action="" method="POST">
+          {% csrf_token %}
+          <div class="modal-header text-center">
+            <h4 class="modal-title w-100 font-weight-bold">You can offer a new song</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="md-form">
+              <div class="form-group">
+                <i class="fa fa-music prefix grey-text"></i>
+                <input id="offer" type="text" name="offer" class="form-control" placeholder="Please enter your offer" required="required">
+                <div class="help-block with-errors"></div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer d-flex justify-content-center">
+            <button type="submit" id="send-offer-btn" class="btn btn-success btn-send">Send <i class="fa fa-paper-plane-o ml-1"></i></button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade top" id="modalSuccess" role="dialog">
+  <div class="modal-dialog modal-frame modal-top modal-notify modal-info" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="row d-flex justify-content-center align-items-center">
+          <p class="pt-3 pr-2">Your message has been successfully sent!</p>
+          <a type="button" class="btn btn-outline-primary waves-effect" data-dismiss="modal">Ok, thanks</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="{% static 'js/app.js' %}"></script>
+  <script src="{% static 'js/skycons.js' %}"></script>
+  <script src="{% static 'js/go-to-top.js' %}"></script>
+  <script type="text/javascript">
+  function toggle() {
+    var music = document.querySelector(".music");
+    if (music.style.visibility == 'hidden') {
+      music.style.visibility = 'visible';
+    } else {
+      music.style.visibility = 'hidden';
+    }
+  };
+  </script>
+  <script type="text/javascript">
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+  </script>
+  <script type="text/javascript">
+  $(document).ready(function() {
+    $('#offer-form').submit(function(event) {
+      event.preventDefault();
+      $.ajax({
+        type: 'POST',
+        url: "{% url 'sendoffer' %}",
+        data: {
+          'offer': $('#offer').val(),
+          'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+        }
+      });
+      resetMusicForm();
+      return false;
+    });
+    });
+
+  function resetMusicForm() {
+    $('#offer').val('');
+    $('#musicList').modal('hide');
+    $('#modalSuccess').modal('show');
+  };
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+  $('#contact-form').submit(function(event) {
+  event.preventDefault();
+  $.ajax({
+    type: 'POST',
+    url: "{% url 'sendmessage' %}",
+    data: {
+      'author': $('#author').val(),
+      'email': $('#email').val(),
+      'message': $('#message').val(),
+      'csrfmiddlewaretoken': $("input[name=csrfmiddlewaretoken]").val()
+    }
+  });
+  resetMessageForm();
+  return false;
+});
+});
+
+function resetMessageForm() {
+  $('#author').val('');
+  $('#email').val('');
+  $('#message').val('');
+  $('#modalSuccess').modal('show');
+};
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+    $(".more").click(function(){
+        $.ajax({
+            type: 'GET',
+            url: '{% url "showarticle" %}',
+            data: {
+              'key': $(this).attr("title")
+            },
+            success: function(response) {
+              $(".article-header").html(`<h1>${response.article.title}</h1>`);
+              $(".article-content").html(`${response.article.content}`);
+          }
+        });
+    });
+});
+</script>
+{% block getnews %}
+{% endblock %}
+{% block playmusic %}
+{% endblock %}
+<script src="{% static 'js/menu.js' %}"></script>
+</body>
+
+</html>

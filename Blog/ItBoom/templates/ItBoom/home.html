@@ -1,0 +1,112 @@
+{% extends 'index.html' %}
+
+
+
+{% block carousel %}
+<div class="bd-example">
+  <div id="carouselExampleCaptions" class="carousel slide casousel-fade" data-ride="carousel">
+    <div class="carousel-inner view overlay zoom">
+      {% for topic in news %}
+      {% if topic.id == latest %}
+      <div class="carousel-item active" title="{{ topic.title }}">
+      {% else %}
+      <div class="carousel-item" title="{{ topic.title }}">
+      {% endif %}
+        <a href="#article"><img src="{{ topic.photo.url }}" class="d-block w-100"
+            alt="{{ topic.title }}">
+          <div class="carousel-caption grey lighten-2 d-none d-md-block" title="{{ topic.title }}">
+            <h3>{{ topic.title }}</h3>
+            <p>{{ topic.content|safe }}</p>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  <script>
+    $('.carousel').carousel({
+      interval: 10000
+    })
+  </script>
+</div>
+{% endblock %}
+
+{% block getnews %}
+<script type="text/javascript">
+$(document).ready(function(){
+    $(".carousel-item").click(function(){
+        $.ajax({
+            type: 'GET',
+            url: '{% url "shownews" %}',
+            data: {
+              'key': $(this).attr("title")
+            },
+            success: function(response) {
+              $(".article-header").html(`<h1>${response.news.title}</h1>`);
+              $(".article-content").html(`${response.news.content}`);
+          }
+        });
+    });
+});
+</script>
+{% endblock %}
+
+{% block playmusic %}
+<script type="text/javascript">
+var songs = {{ Song_records|safe }};
+var songNames = {{ Song_names|safe }};
+var artist = {{ Song_artists|safe }};
+var songName = document.getElementById("songName");
+var songArtist = document.getElementById("songArtist");
+var expandingBar = document.getElementById("expandingBar");
+
+var song = new Audio();
+var currentSong = Math.floor(Math.random()*(songs.length - 1));
+window.onload = playSong;
+
+function playSong(){
+song.src = songs[currentSong];
+songName.textContent = songNames[currentSong];
+songArtist.textContent = artist[currentSong];
+}
+
+song.addEventListener('timeupdate', function(){
+  var position = song.currentTime / song.duration;
+  expandingBar.style.width = position * 100 + "%";
+  if(song.ended){
+    next();
+  }
+});
+
+function playPause(){
+  if(song.paused) {
+    song.play();
+    $("#play i").removeClass("fa-play").addClass("fa-pause");
+  }
+  else {
+    song.pause();
+    $("#play i").removeClass("fa-pause").addClass("fa-play");
+  }
+}
+
+function next(){
+  currentSong++;
+  if(currentSong > songs.length-1){
+    currentSong = 0;
+  }
+  playSong();
+  song.play();
+  $("#play i").removeClass("fa-play").addClass("fa-pause");
+}
+
+function prev(){
+  currentSong--;
+  if(currentSong < 0){
+    currentSong = songs.length-1;
+  }
+  playSong();
+  song.play();
+  $("#play i").removeClass("fa-play").addClass("fa-pause");
+}
+</script>
+{% endblock %}
